@@ -21,7 +21,7 @@ Abaixo estão os links reais utilizados para alimentar o NotebookLM, garantindo 
 ### 🎥 Conteúdo em Vídeo (YouTube)
 *   **[Harvard CS50P]** [Introduction to Programming with Python](https://www.youtube.com/watch?v=nLRL_NcnK-4) - Fundamentos e lógica de programação.
 *   **[NIC.br - SemanaCap 5]** [Automatizando serviços de redes com Python: básico](https://www.youtube.com/watch?v=AHMQozWKRiY) - Foco em ISPs.
-*   **[NIC.br - SemanaCap 8]** [Ferramentas de automação de redes para ISPs](https://www.youtube.com/watch?v=8m97-P6Y1Xk) - Orquestração e ferramentas de mercado.
+*   **[NIC.br - SemanaCap 8]** [Ferramentas de automação de redes para ISPs](https://www.youtube.com/watch?v=3Y7ohoDWMfY) - Orquestração e ferramentas de mercado.
 
 ### 📖 Documentação & Repositórios
 *   **[MikroTik Help]** [REST API Official Documentation](https://help.mikrotik.com/docs/spaces/ROS/pages/47579162/REST+API) - Referência de Endpoints RouterOS v7.
