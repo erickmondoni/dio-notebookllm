@@ -61,32 +61,46 @@ A automação de MikroTik na versão 7 marca a mudança para o paradigma "API-Fi
 *   **Query Parameter:** Filtros adicionados à URL (ex: `?.query=state!="established"`) para refinar a busca.
 
 ### 3. Biblioteca de Prompts Reutilizáveis
-Prompts configurados para revisões futuras no NotebookLM:
-*   > *"Com base nas fontes, gere um script que busque sessões BGP filtradas pelo comentário 'Link_Principal'."*
-*   > *"Explique como o conceito de Programação Assíncrona (asyncio) pode ser aplicado para consultar múltiplos roteadores simultaneamente via REST API."*
-*   > *"Crie um checklist de segurança para expor a API do MikroTik apenas em uma VLAN de gerência isolada."*
+*   > *"Gere um script que use a REST API para buscar sessões BGP filtradas pelo comentário 'Link_Principal'."*
+*   > *"Explique como o conceito de Programação Assíncrona (asyncio) pode ser aplicado para consultar múltiplos roteadores via REST API."*
 
 ---
 
 ## 🚀 Exemplo Prático de Implementação
-Snippet de código recomendado para monitoramento performático via REST API:
-
+Snippet de código focado em boas práticas de ISP (Segurança e Performance):
 ```python
 import requests
+import urllib3
+
+# Desabilita avisos de certificados self-signed comuns em infra de rede
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def check_bgp_status(ip, user, password):
-    # Uso de Query Parameter para filtrar apenas vizinhos que NÃO estão established
-    url = f"https://{ip}/rest/routing/bgp/session?.query=state!=\"established\""
+    # Endpoint do RouterOS v7 para sessões BGP
+    url = f"https://{ip}/rest/routing/bgp/session"
     
     try:
-        # Em produção, utilize certificados válidos em vez de verify=False
-        response = requests.get(url, auth=(user, password), verify=False, timeout=5)
-        # O roteador já retorna apenas os vizinhos com problema em formato JSON
-        return response.json()
+        # Requisição segura via HTTPS com Timeout definido
+        response = requests.get(url, auth=(user, password), verify=False, timeout=10)
+        response.raise_for_status() 
+        
+        # Converte resposta JSON em lista Python
+        sessions = response.json()
+
+        for peer in sessions:
+            remote_as = peer.get("remote-as")
+            state = peer.get("state")
+            
+            if state != "established":
+                print(f"ALERTA ISP: Vizinho AS{remote_as} em estado: {state}")
+            else:
+                print(f"Vizinho AS{remote_as} OK.")
+
     except requests.exceptions.RequestException as e:
-        return f"Erro de conexão com o roteador: {e}"
+        print(f"Erro crítico de conexão com o roteador {ip}: {e}")
 
 if __name__ == "__main__":
-    # Teste de execução
-    resultado = check_bgp_status("192.168.88.1", "admin", "password_secreta")
-    print(resultado)
+    check_bgp_status("192.168.88.1", "admin", "sua_senha_segura")
+```
+---
+Projeto desenvolvido para o desafio de projeto da DIO, unindo Inteligência Artificial e Engenharia de Redes.
