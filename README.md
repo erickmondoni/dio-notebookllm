@@ -31,7 +31,7 @@ Abaixo estão os links reais utilizados para alimentar o NotebookLM, garantindo 
 ---
 
 ## 🛠️ Engenharia de Prompts e "Cicatrizes"
-Nesta seção, documento as estratégias de instrução da IA e os desafios técnicos superados (Troubleshooting).
+Nesta seção, documento as estratégias de instrução da IA e os desafios técnicos superados.
 
 ### 🤖 Configuração do Mentor (Role Prompting)
 Para elevar o nível das respostas, utilizei um **Prompt de Sistema** que define a "persona" do NotebookLM. Esta é uma técnica de reutilização que garante que a IA atue como um instrutor sênior:
@@ -41,8 +41,8 @@ Para elevar o nível das respostas, utilizei um **Prompt de Sistema** que define
 
 ### Caso Real: Monitoramento de Vizinhos BGP
 *   **Pergunta Estratégica:** *"Como criar um script Python que monitore o status de um vizinho BGP e envie um log se ele não estiver 'established'?"*
-*   **Dificuldade (Cicatriz):** A IA inicialmente sugeriu o uso de Netmiko (SSH). Para um ISP com centenas de vizinhos, o *parsing* de texto via SSH é lento e propenso a falhas de processamento.
-*   **Ajuste de Rota:** Utilizando a persona de "Mentor", forcei a comparação com a **REST API**. Identificamos que o retorno em **JSON** permite o uso de filtros nativos (Query Parameters) diretamente na URL, o que economiza memória do roteador e reduz drasticamente a latência da automação.
+*   **Desafio Técnico (A "Cicatriz"):** A abordagem comum via CLI (`/routing/bgp/session/print`) retorna texto puro (String). Para automatizar isso, seria necessário o uso de Regex complexos para encontrar o estado da sessão, o que é instável em larga escala.
+*   **Solução de Engenharia:** Utilizando a persona de "Mentor", validamos que a **REST API (v7)** é o padrão ouro. Ela entrega dados em **JSON**, permitindo que o Python trate a resposta como uma lista de dicionários. Além disso, aplicamos o conceito de **Query Parameters** para filtrar sessões específicas diretamente no hardware, otimizando o consumo de CPU e RAM do servidor de automação.
 
 ---
 
